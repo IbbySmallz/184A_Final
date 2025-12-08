@@ -4,9 +4,30 @@ This project implements a CNN-based image classification system to automatically
 
 ## Dataset
 
-Download the dataset from Kaggle: https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
+The dataset will be automatically downloaded from Kaggle when you first run the code. 
 
-Extract the dataset and place it in the `data/` directory. The expected structure is:
+**Automatic Download (Recommended):**
+1. Set up Kaggle API authentication:
+   - Go to https://www.kaggle.com/settings
+   - Scroll down to "API" section
+   - Click "Create New Token" to download `kaggle.json`
+   - Place `kaggle.json` in `~/.kaggle/` directory (or `C:\Users\<YourUsername>\.kaggle\` on Windows)
+   - Make sure the file has correct permissions: `chmod 600 ~/.kaggle/kaggle.json`
+
+2. Install dependencies (includes kagglehub):
+```bash
+pip install -r requirements.txt
+```
+
+3. Run any script - the dataset will be automatically downloaded on first use:
+```bash
+python example_usage.py
+```
+
+**Manual Download (Alternative):**
+If you prefer to download manually:
+1. Download from Kaggle: https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
+2. Extract the dataset and place it in the `data/` directory with this structure:
 ```
 data/
   cell_images/
@@ -22,6 +43,8 @@ data/
 ```bash
 pip install -r requirements.txt
 ```
+
+2. (Optional) Set up Kaggle API for automatic dataset download (see Dataset section above)
 
 ## Usage
 
