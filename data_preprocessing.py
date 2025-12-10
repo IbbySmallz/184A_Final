@@ -61,7 +61,7 @@ class TransformedSubset(torch.utils.data.Dataset):
 
 def get_data_loaders(data_dir, batch_size=32, image_size=224, 
                      train_ratio=0.8, val_ratio=0.1, test_ratio=0.1,
-                     num_workers=4, random_seed=42, auto_download=True):
+                     num_workers=4, random_seed=42):
     """
     Create data loaders for train, validation, and test sets.
     
@@ -74,34 +74,35 @@ def get_data_loaders(data_dir, batch_size=32, image_size=224,
         test_ratio: Proportion for testing
         num_workers: Number of worker processes for data loading
         random_seed: Random seed for reproducibility
-        auto_download: If True, automatically download dataset if missing (default: True)
     
     Returns:
         train_loader, val_loader, test_loader
     """
     assert abs(train_ratio + val_ratio + test_ratio - 1.0) < 1e-6, "Ratios must sum to 1.0"
     
-    # Check if dataset exists, download if missing
+    # Check if dataset exists
     if not os.path.exists(data_dir) or not os.path.isdir(data_dir):
-        if auto_download:
-            print(f"Dataset not found at {data_dir}. Attempting to download...")
-            from utils import download_dataset
-            downloaded_path = download_dataset(data_dir)
-            if downloaded_path is None:
-                raise FileNotFoundError(
-                    f"Dataset not found at {data_dir} and automatic download failed.\n"
-                    "Please download the dataset manually from:\n"
-                    "https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria\n"
-                    "Or set up Kaggle API authentication for automatic download."
-                )
-            data_dir = downloaded_path
-        else:
-            raise FileNotFoundError(
-                f"Dataset not found at {data_dir}.\n"
-                "Please download the dataset from:\n"
-                "https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria\n"
-                "Extract it and place the 'cell_images' folder in the 'data' directory."
-            )
+        raise FileNotFoundError(
+            f"Dataset not found at {data_dir}.\n"
+            "The dataset should be included in the repository at 'data/cell_images/'.\n"
+            "Expected structure:\n"
+            "  data/\n"
+            "    cell_images/\n"
+            "      Parasitized/\n"
+            "      Uninfected/\n"
+        )
+    
+    # Verify dataset structure
+    expected_classes = ['Parasitized', 'Uninfected']
+    missing_classes = [cls for cls in expected_classes 
+                      if not os.path.exists(os.path.join(data_dir, cls))]
+    if missing_classes:
+        raise FileNotFoundError(
+            f"Dataset structure is incorrect. Missing class folders: {missing_classes}\n"
+            f"Expected structure at {data_dir}:\n"
+            "  Parasitized/\n"
+            "  Uninfected/\n"
+        )
     
     # Set random seed
     torch.manual_seed(random_seed)

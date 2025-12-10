@@ -3,7 +3,6 @@ Utility functions for training, evaluation, and visualization.
 """
 
 import os
-import shutil
 import torch
 import numpy as np
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
@@ -136,111 +135,4 @@ def plot_training_history(train_losses, val_losses, train_accs, val_accs, save_p
 def ensure_dir(directory):
     """Ensure directory exists, create if it doesn't."""
     os.makedirs(directory, exist_ok=True)
-
-
-def download_dataset(data_dir='data/cell_images', dataset_id='iarunava/cell-images-for-detecting-malaria'):
-    """
-    Download the malaria cell images dataset from Kaggle using kagglehub.
-    
-    Args:
-        data_dir: Target directory where cell_images folder should be located
-        dataset_id: Kaggle dataset identifier (default: 'iarunava/cell-images-for-detecting-malaria')
-    
-    Returns:
-        Path to the cell_images directory if successful, None otherwise
-    """
-    try:
-        import kagglehub
-    except ImportError:
-        print("Error: kagglehub is not installed. Please install it with:")
-        print("  pip install kagglehub")
-        print("\nAlternatively, you can manually download the dataset from:")
-        print("  https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria")
-        return None
-    
-    # Check if dataset already exists
-    if os.path.exists(data_dir) and os.path.isdir(data_dir):
-        # Check if it contains the expected structure
-        expected_classes = ['Parasitized', 'Uninfected']
-        if all(os.path.exists(os.path.join(data_dir, cls)) for cls in expected_classes):
-            print(f"Dataset already exists at {data_dir}")
-            return data_dir
-    
-    print(f"Downloading dataset from Kaggle: {dataset_id}")
-    print("This may take a few minutes depending on your internet connection...")
-    
-    try:
-        # Download dataset using kagglehub
-        # kagglehub downloads to a cache directory and returns the path
-        dataset_path = kagglehub.dataset_download(dataset_id)
-        print(f"Dataset downloaded to: {dataset_path}")
-        
-        # Find the cell_images directory in the downloaded dataset
-        # The structure might be: dataset_path/cell_images/ or dataset_path/.../cell_images/
-        cell_images_path = None
-        
-        # First, check if cell_images is directly in the dataset_path
-        potential_path = os.path.join(dataset_path, 'cell_images')
-        if os.path.exists(potential_path) and os.path.isdir(potential_path):
-            # Check if this contains the class folders directly
-            if all(os.path.exists(os.path.join(potential_path, cls)) for cls in expected_classes):
-                cell_images_path = potential_path
-            else:
-                # Check if there's a nested cell_images folder
-                nested_path = os.path.join(potential_path, 'cell_images')
-                if os.path.exists(nested_path) and os.path.isdir(nested_path):
-                    if all(os.path.exists(os.path.join(nested_path, cls)) for cls in expected_classes):
-                        cell_images_path = nested_path
-        else:
-            # Search for cell_images directory recursively
-            for root, dirs, files in os.walk(dataset_path):
-                if 'cell_images' in dirs:
-                    candidate = os.path.join(root, 'cell_images')
-                    # Check if this contains the class folders directly
-                    if all(os.path.exists(os.path.join(candidate, cls)) for cls in expected_classes):
-                        cell_images_path = candidate
-                        break
-                    # Check for nested structure
-                    nested = os.path.join(candidate, 'cell_images')
-                    if os.path.exists(nested) and os.path.isdir(nested):
-                        if all(os.path.exists(os.path.join(nested, cls)) for cls in expected_classes):
-                            cell_images_path = nested
-                            break
-        
-        if cell_images_path is None:
-            print(f"Warning: Could not find 'cell_images' directory with expected class structure.")
-            print(f"Please check the structure at: {dataset_path}")
-            print("You may need to manually extract and organize the dataset.")
-            return None
-        
-        # Create target directory if it doesn't exist
-        target_parent = os.path.dirname(data_dir)
-        ensure_dir(target_parent)
-        
-        # If target directory exists but is empty/wrong, remove it
-        if os.path.exists(data_dir):
-            if not all(os.path.exists(os.path.join(data_dir, cls)) for cls in expected_classes):
-                print(f"Removing incomplete dataset at {data_dir}")
-                shutil.rmtree(data_dir)
-        
-        # Copy or move cell_images to target location
-        if os.path.exists(data_dir):
-            print(f"Dataset already exists at {data_dir}, skipping copy.")
-        else:
-            print(f"Copying dataset to {data_dir}...")
-            shutil.copytree(cell_images_path, data_dir)
-            print(f"Dataset successfully copied to {data_dir}")
-        
-        return data_dir
-        
-    except Exception as e:
-        print(f"Error downloading dataset: {str(e)}")
-        print("\nTroubleshooting:")
-        print("1. Make sure you have a Kaggle account")
-        print("2. You may need to authenticate with Kaggle API:")
-        print("   - Go to https://www.kaggle.com/settings")
-        print("   - Create an API token and save kaggle.json to ~/.kaggle/")
-        print("3. Alternatively, manually download from:")
-        print("   https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria")
-        return None
 

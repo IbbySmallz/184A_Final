@@ -4,30 +4,7 @@ This project implements a CNN-based image classification system to automatically
 
 ## Dataset
 
-The dataset will be automatically downloaded from Kaggle when you first run the code. 
-
-**Automatic Download (Recommended):**
-1. Set up Kaggle API authentication:
-   - Go to https://www.kaggle.com/settings
-   - Scroll down to "API" section
-   - Click "Create New Token" to download `kaggle.json`
-   - Place `kaggle.json` in `~/.kaggle/` directory (or `C:\Users\<YourUsername>\.kaggle\` on Windows)
-   - Make sure the file has correct permissions: `chmod 600 ~/.kaggle/kaggle.json`
-
-2. Install dependencies (includes kagglehub):
-```bash
-pip install -r requirements.txt
-```
-
-3. Run any script - the dataset will be automatically downloaded on first use:
-```bash
-python example_usage.py
-```
-
-**Manual Download (Alternative):**
-If you prefer to download manually:
-1. Download from Kaggle: https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
-2. Extract the dataset and place it in the `data/` directory with this structure:
+The dataset is included in this repository. The expected structure is:
 ```
 data/
   cell_images/
@@ -37,6 +14,10 @@ data/
       (images)
 ```
 
+**Original Dataset Source:**
+- Kaggle Dataset: https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
+- The dataset has been downloaded and included in the repository for easy access and reproducibility.
+
 ## Installation
 
 1. Install dependencies:
@@ -44,7 +25,7 @@ data/
 pip install -r requirements.txt
 ```
 
-2. (Optional) Set up Kaggle API for automatic dataset download (see Dataset section above)
+2. The dataset is already included in the repository at `data/cell_images/`
 
 ## Running on Google Colab
 
@@ -71,23 +52,7 @@ In a new code cell, run:
 !pip install -r requirements.txt
 ```
 
-### Step 5: Set Up Kaggle API (for automatic dataset download)
-1. Go to https://www.kaggle.com/settings
-2. Scroll to "API" section and click "Create New Token"
-3. Download the `kaggle.json` file
-4. In Colab, upload the file:
-```python
-from google.colab import files
-files.upload()  # Upload kaggle.json
-```
-5. Move it to the correct location:
-```python
-!mkdir -p ~/.kaggle
-!mv kaggle.json ~/.kaggle/
-!chmod 600 ~/.kaggle/kaggle.json
-```
-
-### Step 6: Run Training
+### Step 5: Run Training
 Now you can run any of the training scripts:
 
 **Quick start (complete workflow):**
@@ -111,7 +76,7 @@ Now you can run any of the training scripts:
 ```
 
 ### Notes for Colab:
-- The dataset will be automatically downloaded on first run (if Kaggle API is set up)
+- The dataset is included in the repository, so no additional download is needed
 - Training typically takes 5-10 minutes with frozen backbone on GPU
 - Model checkpoints and results will be saved in `models/` and `results/` directories
 - To download files from Colab: Right-click on files in the file browser → Download
