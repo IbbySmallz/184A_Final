@@ -46,6 +46,77 @@ pip install -r requirements.txt
 
 2. (Optional) Set up Kaggle API for automatic dataset download (see Dataset section above)
 
+## Running on Google Colab
+
+Follow these steps to run the project on Google Colab with free GPU access:
+
+### Step 1: Open Google Colab
+1. Go to https://colab.research.google.com/
+2. Create a new notebook or open an existing one
+
+### Step 2: Enable GPU
+1. Click **Runtime** → **Change runtime type**
+2. Set **Hardware accelerator** to **GPU** (T4 is free)
+3. Click **Save**
+
+### Step 3: Clone the Repository
+In a new code cell, run:
+```python
+!git clone https://github.com/IbbySmallz/184A_Final.git
+%cd 184A_Final
+```
+
+### Step 4: Install Dependencies
+```python
+!pip install -r requirements.txt
+```
+
+### Step 5: Set Up Kaggle API (for automatic dataset download)
+1. Go to https://www.kaggle.com/settings
+2. Scroll to "API" section and click "Create New Token"
+3. Download the `kaggle.json` file
+4. In Colab, upload the file:
+```python
+from google.colab import files
+files.upload()  # Upload kaggle.json
+```
+5. Move it to the correct location:
+```python
+!mkdir -p ~/.kaggle
+!mv kaggle.json ~/.kaggle/
+!chmod 600 ~/.kaggle/kaggle.json
+```
+
+### Step 6: Run Training
+Now you can run any of the training scripts:
+
+**Quick start (complete workflow):**
+```python
+!python example_usage.py
+```
+
+**Train MobileNetV2:**
+```python
+!python train.py --model mobilenetv2 --epochs 20 --batch_size 32 --data_dir data/cell_images
+```
+
+**Train EfficientNetB0:**
+```python
+!python train.py --model efficientnetb0 --epochs 20 --batch_size 32 --data_dir data/cell_images
+```
+
+**Evaluate a trained model:**
+```python
+!python evaluate.py --model_path models/mobilenetv2_best.pth --model_type mobilenetv2 --data_dir data/cell_images
+```
+
+### Notes for Colab:
+- The dataset will be automatically downloaded on first run (if Kaggle API is set up)
+- Training typically takes 5-10 minutes with frozen backbone on GPU
+- Model checkpoints and results will be saved in `models/` and `results/` directories
+- To download files from Colab: Right-click on files in the file browser → Download
+- Colab sessions timeout after ~12 hours of inactivity
+
 ## Usage
 
 ### Quick Start
