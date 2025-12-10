@@ -28,7 +28,8 @@ wheels/
 *.pt
 
 # Data
-data/
+data/  # Full dataset kept locally, not in repository
+# Note: data_minimal/ is NOT ignored - it will be committed
 *.csv
 *.h5
 *.hdf5
@@ -50,8 +51,7 @@ Thumbs.db
 # Project specific
 models/
 results/
-*.png
-*.jpg
-*.jpeg
-!README.md
+# Note: Image files (*.png, *.jpg, *.jpeg) are allowed in data_minimal/
+# We don't ignore them globally to allow the minimal dataset to be committed
+create_minimal_dataset.py  # Development utility, not part of project deliverables
 
