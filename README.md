@@ -1,31 +1,141 @@
 # Deep Learning for Malaria Parasite Detection in Blood Smears
 
-This project implements a CNN-based image classification system to automatically detect malaria infection from microscopy images of human blood smears.
+This project implements a CNN-based image classification system to automatically detect malaria infection from microscopy images of human blood smears using transfer learning with pretrained MobileNetV2 and EfficientNetB0 models.
 
-## Dataset
+## Quick Start (Demo)
 
-The dataset is included in this repository. The expected structure is:
-```
-data/
-  cell_images/
-    Parasitized/
-      (images)
-    Uninfected/
-      (images)
+The repository includes a minimal dataset (400 images) that allows you to run the complete demo end-to-end without any additional downloads.
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/IbbySmallz/184A_Final.git
+cd 184A_Final
 ```
 
-**Original Dataset Source:**
-- Kaggle Dataset: https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
-- The dataset has been downloaded and included in the repository for easy access and reproducibility.
-
-## Installation
-
-1. Install dependencies:
+### Step 2: Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-2. The dataset is already included in the repository at `data/cell_images/`
+### Step 3: Run the Demo
+```bash
+python example_usage.py
+```
+
+This will:
+- Load the minimal dataset from `data_minimal/cell_images/`
+- Train a MobileNetV2 model for 20 epochs
+- Evaluate the trained model on the test set
+- Generate visualizations (confusion matrix, ROC curve, training history)
+- Save results to `models/` and `results/` directories
+
+**Expected runtime:** ~5-10 minutes on CPU, ~2-3 minutes on GPU
+
+## Installation and Environment Setup
+
+### Requirements
+- Python 3.8 or higher
+- pip package manager
+
+### Step-by-Step Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/IbbySmallz/184A_Final.git
+   cd 184A_Final
+   ```
+
+2. **Install Python dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Verify installation:**
+   ```bash
+   python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
+   ```
+
+The minimal dataset is already included in the repository at `data_minimal/cell_images/`, so no additional data download is required to run the demo.
+
+## Dataset
+
+### Minimal Dataset (Included in Repository)
+
+A minimal dataset is included in this repository for demonstration purposes:
+- **Location:** `data_minimal/cell_images/`
+- **Size:** 400 images (200 Parasitized, 200 Uninfected)
+- **Purpose:** Allows the demo to run end-to-end without external downloads
+- **Structure:**
+  ```
+  data_minimal/
+    cell_images/
+      Parasitized/
+        (200 images)
+      Uninfected/
+        (200 images)
+  ```
+
+### Full Dataset (Optional - For Better Results)
+
+If you want to train on the full dataset for better performance, you can download it from Kaggle:
+
+**Original Dataset Source:**
+- Kaggle Dataset: https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
+- **Size:** ~27,558 images (13,779 Parasitized, 13,779 Uninfected)
+- **Size on disk:** ~777 MB
+
+**Download Instructions:**
+
+1. **Option A: Using Kaggle API (Recommended)**
+   ```bash
+   # Install Kaggle API
+   pip install kaggle
+   
+   # Set up Kaggle credentials (download kaggle.json from https://www.kaggle.com/settings)
+   # Place kaggle.json in ~/.kaggle/ directory
+   chmod 600 ~/.kaggle/kaggle.json
+   
+   # Download dataset
+   kaggle datasets download -d iarunava/cell-images-for-detecting-malaria
+   unzip cell-images-for-detecting-malaria.zip -d temp_extract
+   
+   # Organize dataset structure
+   # Find the cell_images folder in the extracted files and move it to data/cell_images/
+   # The structure should be: data/cell_images/Parasitized/ and data/cell_images/Uninfected/
+   ```
+
+2. **Option B: Manual Download**
+   - Visit https://www.kaggle.com/datasets/iarunava/cell-images-for-detecting-malaria
+   - Click "Download" (requires Kaggle account)
+   - Extract the zip file
+   - Organize the dataset so the structure is:
+     ```
+     data/
+       cell_images/
+         Parasitized/
+           (images)
+         Uninfected/
+           (images)
+     ```
+
+**Note:** The demo code (`example_usage.py`) uses the minimal dataset by default. To use the full dataset, modify the `data_dir` parameter in the script or use command-line arguments.
+
+## Demo Code
+
+The repository includes `example_usage.py`, which is a complete runnable demo that demonstrates the full workflow:
+
+1. **Data Loading:** Loads and preprocesses the minimal dataset
+2. **Model Creation:** Creates a MobileNetV2 model with transfer learning
+3. **Training:** Trains the model for 20 epochs
+4. **Evaluation:** Evaluates the trained model on the test set
+5. **Visualization:** Generates confusion matrix, ROC curve, and training history plots
+
+**To run the demo:**
+```bash
+python example_usage.py
+```
+
+The demo uses the minimal dataset (`data_minimal/cell_images/`) by default, so it will run successfully without any additional data downloads.
 
 ## Running on Google Colab
 
@@ -52,55 +162,49 @@ In a new code cell, run:
 !pip install -r requirements.txt
 ```
 
-### Step 5: Run Training
-Now you can run any of the training scripts:
-
-**Quick start (complete workflow):**
+### Step 5: Run the Demo
 ```python
 !python example_usage.py
 ```
 
-**Train MobileNetV2:**
-```python
-!python train.py --model mobilenetv2 --epochs 20 --batch_size 32 --data_dir data/cell_images
-```
+This will run the complete workflow using the minimal dataset included in the repository.
 
-**Train EfficientNetB0:**
-```python
-!python train.py --model efficientnetb0 --epochs 20 --batch_size 32 --data_dir data/cell_images
-```
-
-**Evaluate a trained model:**
-```python
-!python evaluate.py --model_path models/mobilenetv2_best.pth --model_type mobilenetv2 --data_dir data/cell_images
-```
+**For full dataset training on Colab:**
+If you want to use the full dataset, you'll need to download it first (see Dataset section above), then modify the `data_dir` parameter or use command-line arguments.
 
 ### Notes for Colab:
-- The dataset is included in the repository, so no additional download is needed
-- Training typically takes 5-10 minutes with frozen backbone on GPU
+- The minimal dataset is included in the repository, so the demo runs without additional downloads
+- Training typically takes 2-3 minutes with frozen backbone on GPU (minimal dataset)
 - Model checkpoints and results will be saved in `models/` and `results/` directories
 - To download files from Colab: Right-click on files in the file browser → Download
 - Colab sessions timeout after ~12 hours of inactivity
 
 ## Usage
 
-### Quick Start
+### Quick Start (Demo)
 
-For a complete example workflow, run:
+For a complete example workflow using the minimal dataset:
 ```bash
 python example_usage.py
 ```
 
+This script demonstrates the full pipeline: data loading, model creation, training, and evaluation.
+
 ### Training Models
 
-Train MobileNetV2 (default, fastest):
+Train MobileNetV2 (default, fastest) with minimal dataset:
+```bash
+python train.py --model mobilenetv2 --epochs 20 --batch_size 32 --data_dir data_minimal/cell_images
+```
+
+Train MobileNetV2 with full dataset (if downloaded):
 ```bash
 python train.py --model mobilenetv2 --epochs 20 --batch_size 32 --data_dir data/cell_images
 ```
 
 Train EfficientNetB0:
 ```bash
-python train.py --model efficientnetb0 --epochs 20 --batch_size 32 --data_dir data/cell_images
+python train.py --model efficientnetb0 --epochs 20 --batch_size 32 --data_dir data_minimal/cell_images
 ```
 
 **Training Options:**
@@ -112,22 +216,22 @@ python train.py --model efficientnetb0 --epochs 20 --batch_size 32 --data_dir da
 - `--no_pretrained`: Do not use pretrained weights (default: uses pretrained)
 - `--unfreeze_backbone`: Unfreeze backbone for fine-tuning (default: frozen)
 - `--patience`: Early stopping patience (default: 10)
-- `--data_dir`: Path to cell_images directory
+- `--data_dir`: Path to cell_images directory (default: `data_minimal/cell_images` for demo)
 - `--save_dir`: Directory to save models (default: `models`)
 
-**Note:** By default, the backbone is frozen and only the classification head is trained, making training very fast (typically 5-10 minutes on GPU).
+**Note:** By default, the backbone is frozen and only the classification head is trained, making training very fast (typically 2-3 minutes on GPU for minimal dataset, 5-10 minutes for full dataset).
 
 ### Evaluation
 
 Evaluate a trained model:
 ```bash
-python evaluate.py --model_path models/mobilenetv2_best.pth --model_type mobilenetv2 --data_dir data/cell_images
+python evaluate.py --model_path models/mobilenetv2_best.pth --model_type mobilenetv2 --data_dir data_minimal/cell_images
 ```
 
 **Evaluation Options:**
 - `--model_path`: Path to model checkpoint
 - `--model_type`: Model architecture type (`mobilenetv2`, `efficientnetb0`)
-- `--data_dir`: Path to cell_images directory
+- `--data_dir`: Path to cell_images directory (default: `data_minimal/cell_images`)
 - `--save_dir`: Directory to save results (default: `results`)
 - `--num_misclassified`: Number of misclassified samples to visualize (default: 10)
 
@@ -220,6 +324,53 @@ After evaluation, the following files are generated in the `results/` directory:
 - **Image size**: 224x224 pixels
 - **Normalization**: ImageNet statistics (mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 - **Training time**: ~5-10 minutes on GPU (backbone frozen), ~30-60 minutes if unfrozen
+
+## Reproducibility
+
+This repository is designed to be fully reproducible. To reproduce our results:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/IbbySmallz/184A_Final.git
+   cd 184A_Final
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. **Run the demo:**
+   ```bash
+   python example_usage.py
+   ```
+
+The demo uses the minimal dataset included in the repository and will:
+- Train a MobileNetV2 model for 20 epochs
+- Save the best model checkpoint
+- Evaluate on the test set
+- Generate all visualizations
+
+**Note:** Results may vary slightly due to random initialization, but the overall performance should be consistent. For exact reproducibility, the random seed is set to 42 in the data preprocessing code.
+
+## Verification
+
+To verify the installation and that everything works:
+
+```bash
+# Check Python version (should be 3.8+)
+python --version
+
+# Check PyTorch installation
+python -c "import torch; print(f'PyTorch {torch.__version__}')"
+
+# Verify minimal dataset exists
+ls data_minimal/cell_images/Parasitized/ | wc -l  # Should show ~200
+ls data_minimal/cell_images/Uninfected/ | wc -l   # Should show ~200
+
+# Run a quick test
+python example_usage.py
+```
 
 ## Citation
 

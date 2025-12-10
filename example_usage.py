@@ -13,14 +13,16 @@ from utils import ensure_dir
 
 def main():
     # Configuration
-    data_dir = 'data/cell_images'  # Dataset will be auto-downloaded if missing
+    # Using minimal dataset included in repository for demo
+    data_dir = 'data_minimal/cell_images'  # Minimal dataset (400 images) included in repo
     model_name = 'mobilenetv2'  # Options: 'mobilenetv2', 'efficientnetb0'
     batch_size = 32
     num_epochs = 20  # Fast training with frozen backbone
     image_size = 224
     learning_rate = 0.001
     
-    # Note: Dataset will be automatically downloaded if missing via get_data_loaders
+    # Note: The minimal dataset is included in the repository at data_minimal/cell_images/
+    # For full dataset, download from Kaggle and change data_dir to 'data/cell_images'
     
     # Device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
