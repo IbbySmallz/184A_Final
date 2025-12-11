@@ -31,32 +31,6 @@ This will:
 
 **Expected runtime:** ~5-10 minutes on CPU, ~2-3 minutes on GPU
 
-## Installation and Environment Setup
-
-### Requirements
-- Python 3.8 or higher
-- pip package manager
-
-### Step-by-Step Installation
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/IbbySmallz/184A_Final.git
-   cd 184A_Final
-   ```
-
-2. **Install Python dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Verify installation:**
-   ```bash
-   python -c "import torch; print(f'PyTorch version: {torch.__version__}')"
-   ```
-
-The minimal dataset is already included in the repository at `data_minimal/cell_images/`, so no additional data download is required to run the demo.
-
 ## Dataset
 
 ### Minimal Dataset (Included in Repository)
@@ -120,75 +94,7 @@ If you want to train on the full dataset for better performance, you can downloa
 
 **Note:** The demo code (`example_usage.py`) uses the minimal dataset by default. To use the full dataset, modify the `data_dir` parameter in the script or use command-line arguments.
 
-## Demo Code
-
-The repository includes `example_usage.py`, which is a complete runnable demo that demonstrates the full workflow:
-
-1. **Data Loading:** Loads and preprocesses the minimal dataset
-2. **Model Creation:** Creates a MobileNetV2 model with transfer learning
-3. **Training:** Trains the model for 20 epochs
-4. **Evaluation:** Evaluates the trained model on the test set
-5. **Visualization:** Generates confusion matrix, ROC curve, and training history plots
-
-**To run the demo:**
-```bash
-python example_usage.py
-```
-
-The demo uses the minimal dataset (`data_minimal/cell_images/`) by default, so it will run successfully without any additional data downloads.
-
-## Running on Google Colab
-
-Follow these steps to run the project on Google Colab with free GPU access:
-
-### Step 1: Open Google Colab
-1. Go to https://colab.research.google.com/
-2. Create a new notebook or open an existing one
-
-### Step 2: Enable GPU
-1. Click **Runtime** → **Change runtime type**
-2. Set **Hardware accelerator** to **GPU** (T4 is free)
-3. Click **Save**
-
-### Step 3: Clone the Repository
-In a new code cell, run:
-```python
-!git clone https://github.com/IbbySmallz/184A_Final.git
-%cd 184A_Final
-```
-
-### Step 4: Install Dependencies
-```python
-!pip install -r requirements.txt
-```
-
-### Step 5: Run the Demo
-```python
-!python example_usage.py
-```
-
-This will run the complete workflow using the minimal dataset included in the repository.
-
-**For full dataset training on Colab:**
-If you want to use the full dataset, you'll need to download it first (see Dataset section above), then modify the `data_dir` parameter or use command-line arguments.
-
-### Notes for Colab:
-- The minimal dataset is included in the repository, so the demo runs without additional downloads
-- Training typically takes 2-3 minutes with frozen backbone on GPU (minimal dataset)
-- Model checkpoints and results will be saved in `models/` and `results/` directories
-- To download files from Colab: Right-click on files in the file browser → Download
-- Colab sessions timeout after ~12 hours of inactivity
-
 ## Usage
-
-### Quick Start (Demo)
-
-For a complete example workflow using the minimal dataset:
-```bash
-python example_usage.py
-```
-
-This script demonstrates the full pipeline: data loading, model creation, training, and evaluation.
 
 ### Training Models
 
